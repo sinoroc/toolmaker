@@ -1,0 +1,49 @@
+---
+
+
+dist: 'xenial'
+
+language: 'python'
+
+python:
+  - '3.6'
+  - '3.6-dev'
+  - '3.7'
+  - '3.7-dev'
+  - '3.8-dev'
+
+matrix:
+  allow_failures:
+    - python: '3.6-dev'
+    - python: '3.7-dev'
+    - python: '3.8-dev'
+  fast_finish: true
+
+install:
+  - 'python3 -m pip install tox tox-travis tox-venv'
+
+script:
+  - 'python3 -m tox'
+  - 'python3 -m tox -e package'
+
+deploy:
+  - provider: 'pypi'
+    distributions: 'sdist bdist_wheel'
+    user: '${PYPI_USER}'
+    password: '${PYPI_PASSWORD}'
+    on:
+      python: '3.7'
+      tags: true
+  - provider: 'releases'
+    api_key: '${GITHUB_TOKEN}'
+    file_glob: true
+    file: 'dist/*'
+    skip_cleanup: true
+    on:
+      python: '3.7'
+      tags: true
+
+sudo: false
+
+
+... EOF
