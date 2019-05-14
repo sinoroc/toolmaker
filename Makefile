@@ -14,17 +14,19 @@ develop:
 
 
 .PHONY: package
-package: sdist wheel check zapp
+package: sdist wheel zapp
 
 
 .PHONY: sdist
 sdist:
 	python3 setup.py sdist
+	python3 -m twine check dist/*.tar.gz
 
 
 .PHONY: wheel
 wheel:
 	python3 setup.py bdist_wheel
+	python3 -m twine check dist/*.whl
 
 
 .PHONY: zapp
@@ -33,9 +35,8 @@ zapp:
 
 
 .PHONY: check
-check: sdist wheel
-	python3 -m twine check dist/*.tar.gz
-	python3 -m twine check dist/*.whl
+check:
+	python3 setup.py check
 
 
 .PHONY: lint
@@ -63,7 +64,7 @@ pytest:
 
 
 .PHONY: review
-review:
+review: check
 	python3 -m pytest --pep8 --pylint
 
 
