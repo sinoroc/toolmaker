@@ -62,6 +62,15 @@ def _zapp(venv_context, output_file_path, entry_point, requirements):
     )
 
 
+def _get_requirements(section):
+    requirements = [
+        req.strip()
+        for req in section['requirements'].splitlines()
+        if req.strip()
+    ]
+    return requirements
+
+
 def build_pex(cwd_path, venv_context, config, section_name, force):
     """ Build pex
     """
@@ -70,9 +79,7 @@ def build_pex(cwd_path, venv_context, config, section_name, force):
     output_dir_path.mkdir(exist_ok=True)
     output_file_name = section['output_file']
     output_file_path = output_dir_path.joinpath(output_file_name)
-    requirements = [
-        req for req in section['requirements'].splitlines() if req
-    ]
+    requirements = _get_requirements(section)
     entry_point = section['entry_point']
     if force or not output_file_path.exists():
         _pex(venv_context, entry_point, output_file_path, requirements)
@@ -86,9 +93,7 @@ def build_shiv(cwd_path, venv_context, config, section_name, force):
     output_dir_path.mkdir(exist_ok=True)
     output_file_name = section['output_file']
     output_file_path = output_dir_path.joinpath(output_file_name)
-    requirements = [
-        req for req in section['requirements'].splitlines() if req
-    ]
+    requirements = _get_requirements(section)
     console_script = section['console_script']
     if force or not output_file_path.exists():
         _shiv(venv_context, console_script, output_file_path, requirements)
@@ -102,9 +107,7 @@ def build_zapp(cwd_path, venv_context, config, section_name, force):
     output_dir_path.mkdir(exist_ok=True)
     output_file_name = section['output_file']
     output_file_path = output_dir_path.joinpath(output_file_name)
-    requirements = [
-        req for req in section['requirements'].splitlines() if req
-    ]
+    requirements = _get_requirements(section)
     entry_point = section['entry_point']
     if force or not output_file_path.exists():
         _zapp(venv_context, output_file_path, entry_point, requirements)
