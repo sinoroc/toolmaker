@@ -62,7 +62,7 @@ def _zapp(venv_context, output_file_path, entry_point, requirements):
     )
 
 
-def build_pex(cwd_path, venv_context, config, section_name):
+def build_pex(cwd_path, venv_context, config, section_name, force):
     """ Build pex
     """
     section = config[section_name]
@@ -74,10 +74,11 @@ def build_pex(cwd_path, venv_context, config, section_name):
         req for req in section['requirements'].splitlines() if req
     ]
     entry_point = section['entry_point']
-    _pex(venv_context, entry_point, output_file_path, requirements)
+    if force or not output_file_path.exists():
+        _pex(venv_context, entry_point, output_file_path, requirements)
 
 
-def build_shiv(cwd_path, venv_context, config, section_name):
+def build_shiv(cwd_path, venv_context, config, section_name, force):
     """ Build shiv
     """
     section = config[section_name]
@@ -89,10 +90,11 @@ def build_shiv(cwd_path, venv_context, config, section_name):
         req for req in section['requirements'].splitlines() if req
     ]
     console_script = section['console_script']
-    _shiv(venv_context, console_script, output_file_path, requirements)
+    if force or not output_file_path.exists():
+        _shiv(venv_context, console_script, output_file_path, requirements)
 
 
-def build_zapp(cwd_path, venv_context, config, section_name):
+def build_zapp(cwd_path, venv_context, config, section_name, force):
     """ Build zapp
     """
     section = config[section_name]
@@ -104,7 +106,8 @@ def build_zapp(cwd_path, venv_context, config, section_name):
         req for req in section['requirements'].splitlines() if req
     ]
     entry_point = section['entry_point']
-    _zapp(venv_context, output_file_path, entry_point, requirements)
+    if force or not output_file_path.exists():
+        _zapp(venv_context, output_file_path, entry_point, requirements)
 
 
 class _EnvBuilder(venv.EnvBuilder):

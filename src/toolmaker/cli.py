@@ -27,6 +27,10 @@ def _create_args_parser(default_config_path, tools_names=None):
         default=str(default_config_path),
         type=argparse.FileType('r'),
     )
+    args_parser.add_argument(
+        '--force', '-f',
+        action='store_true',
+    )
     group = args_parser.add_mutually_exclusive_group(required=True)
     group.add_argument(
         '--all', '-a',
@@ -81,13 +85,31 @@ def main():
     for tool_name in tools_names:
         if tool_name.endswith('.pex'):
             logger.info("Building pex tool '%s'", tool_name)
-            core.build_pex(cwd_path, venv_context, config, tool_name)
+            core.build_pex(
+                cwd_path,
+                venv_context,
+                config,
+                tool_name,
+                args.force,
+            )
         if tool_name.endswith('.shiv'):
             logger.info("Building shiv tool '%s'", tool_name)
-            core.build_shiv(cwd_path, venv_context, config, tool_name)
+            core.build_shiv(
+                cwd_path,
+                venv_context,
+                config,
+                tool_name,
+                args.force,
+            )
         if tool_name.endswith('.zapp'):
             logger.info("Building zapp tool '%s'", tool_name)
-            core.build_zapp(cwd_path, venv_context, config, tool_name)
+            core.build_zapp(
+                cwd_path,
+                venv_context,
+                config,
+                tool_name,
+                args.force,
+            )
 
 
 # EOF
