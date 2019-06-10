@@ -83,13 +83,14 @@ def main():
     core.venv_update(venv_context)
 
     for tool_name in tools_names:
+        tool_config = config[tool_name]
         if tool_name.endswith('.pex'):
             logger.info("Building pex tool '%s'", tool_name)
             core.build_pex(
                 cwd_path,
                 venv_context,
-                config,
                 tool_name,
+                tool_config,
                 args.force,
             )
         if tool_name.endswith('.shiv'):
@@ -97,8 +98,8 @@ def main():
             core.build_shiv(
                 cwd_path,
                 venv_context,
-                config,
                 tool_name,
+                tool_config,
                 args.force,
             )
         if tool_name.endswith('.zapp'):
@@ -106,8 +107,8 @@ def main():
             core.build_zapp(
                 cwd_path,
                 venv_context,
-                config,
                 tool_name,
+                tool_config,
                 args.force,
             )
 
