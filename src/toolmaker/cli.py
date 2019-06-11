@@ -27,16 +27,25 @@ def _create_args_parser(default_config_path, tools_names=None):
         default=str(default_config_path),
         type=argparse.FileType('r'),
     )
-    args_parser.add_argument(
-        '--force', '-f',
+    action_group = args_parser.add_mutually_exclusive_group()
+    action_group.add_argument(
+        '--build', '-b',
         action='store_true',
     )
-    group = args_parser.add_mutually_exclusive_group(required=True)
-    group.add_argument(
+    action_group.add_argument(
+        '--rebuild', '-r',
+        action='store_true',
+    )
+    action_group.add_argument(
+        '--delete', '-d',
+        action='store_true',
+    )
+    tools_group = args_parser.add_mutually_exclusive_group(required=True)
+    tools_group.add_argument(
         '--all', '-a',
         action='store_true',
     )
-    group.add_argument(
+    tools_group.add_argument(
         '--tools', '-t',
         choices=tools_names,
         metavar='tool',
@@ -74,7 +83,12 @@ def main():
     if args.tools:
         tools_names = args.tools
 
-    core.build(cwd_path, config, tools_names, args.force)
+    if args.delete:
+        core.delete(cwd_path, config, tools_names)
+    elif args.rebuild:
+        core.build(cwd_path, config, tools_names, force=True)
+    else:
+        core.build(cwd_path, config, tools_names)
 
 
 # EOF

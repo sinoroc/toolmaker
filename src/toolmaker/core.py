@@ -122,7 +122,7 @@ def build_zapp(work_dir_path, venv_context, tool_name, config, force):
         LOGGER.info("Tool '%s' already exists, build skipped", tool_name)
 
 
-def build(work_dir_path, config, tools_names, force):
+def build(work_dir_path, config, tools_names, force=False):
     """ Build tools
     """
     LOGGER.info("Preparing to build tools %s", tools_names)
@@ -163,6 +163,33 @@ def build(work_dir_path, config, tools_names, force):
                 tool_config,
                 force,
             )
+
+
+def delete(work_dir_path, config, tools_names):
+    """ Delete tools
+    """
+    LOGGER.info("Deleting tools %s", tools_names)
+
+    for tool_name in tools_names:
+        output_file_path = _get_output_file_path(
+            work_dir_path,
+            tool_name,
+            config[tool_name],
+        )
+        if output_file_path.exists() and output_file_path.is_file():
+            LOGGER.info("Deleting file '%s'", output_file_path)
+            output_file_path.unlink()
+        output_dir_path = output_file_path.parent
+        if output_dir_path.exists() and output_dir_path.is_dir():
+            LOGGER.info("Deleting directory '%s'", output_dir_path)
+            try:
+                output_dir_path.rmdir()
+            except OSError as ose:
+                import errno
+                if ose.errno == errno.ENOTEMPTY:
+                    LOGGER.warning("Directory '%s' not empty", output_dir_path)
+                else:
+                    raise
 
 
 class _EnvBuilder(venv.EnvBuilder):
