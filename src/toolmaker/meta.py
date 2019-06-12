@@ -4,10 +4,10 @@
 """ Meta information """
 
 
-import pkg_resources
+import importlib_metadata
 
 
-VERSION = pkg_resources.get_distribution('toolmaker').version
+VERSION = importlib_metadata.version('toolmaker')
 
 
 # EOF

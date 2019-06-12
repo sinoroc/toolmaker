@@ -27,12 +27,25 @@ def _create_args_parser(default_config_path, tools_names=None):
         default=str(default_config_path),
         type=argparse.FileType('r'),
     )
-    group = args_parser.add_mutually_exclusive_group(required=True)
-    group.add_argument(
+    action_group = args_parser.add_mutually_exclusive_group()
+    action_group.add_argument(
+        '--build', '-b',
+        action='store_true',
+    )
+    action_group.add_argument(
+        '--rebuild', '-r',
+        action='store_true',
+    )
+    action_group.add_argument(
+        '--delete', '-d',
+        action='store_true',
+    )
+    tools_group = args_parser.add_mutually_exclusive_group(required=True)
+    tools_group.add_argument(
         '--all', '-a',
         action='store_true',
     )
-    group.add_argument(
+    tools_group.add_argument(
         '--tools', '-t',
         choices=tools_names,
         metavar='tool',
@@ -46,6 +59,7 @@ def main():
     """
     logger = logging.getLogger(__name__)
     logging.basicConfig(level=logging.INFO)
+
     cwd_path = pathlib.Path.cwd()
     default_config_path = cwd_path.joinpath('toolmaker.cfg')
 
@@ -54,6 +68,7 @@ def main():
 
     config = None
     if args.config:
+        logger.info("Reading configuration from file '%s'", args.config)
         config = configparser.ConfigParser()
         try:
             config.read_file(args.config)
@@ -68,26 +83,12 @@ def main():
     if args.tools:
         tools_names = args.tools
 
-    logger.info("Preparing to build tools %s", tools_names)
-
-    venv_path = cwd_path.joinpath('venv')
-
-    logger.info("Creating virtual environment '%s'...", venv_path)
-    venv_context = core.venv_create(venv_path)
-
-    logger.info("Updating virtual environment")
-    core.venv_update(venv_context)
-
-    for tool_name in tools_names:
-        if tool_name.endswith('.pex'):
-            logger.info("Building pex tool '%s'", tool_name)
-            core.build_pex(cwd_path, venv_context, config, tool_name)
-        if tool_name.endswith('.shiv'):
-            logger.info("Building shiv tool '%s'", tool_name)
-            core.build_shiv(cwd_path, venv_context, config, tool_name)
-        if tool_name.endswith('.zapp'):
-            logger.info("Building zapp tool '%s'", tool_name)
-            core.build_zapp(cwd_path, venv_context, config, tool_name)
+    if args.delete:
+        core.delete(cwd_path, config, tools_names)
+    elif args.rebuild:
+        core.build(cwd_path, config, tools_names, force=True)
+    else:
+        core.build(cwd_path, config, tools_names)
 
 
 # EOF
