@@ -13,7 +13,7 @@ Repositories
 
 Binary distributions:
 
-* http://pypi.org/project/toolmaker/
+* https://pypi.org/project/toolmaker/
 
 Source code:
 
