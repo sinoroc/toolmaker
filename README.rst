@@ -77,6 +77,7 @@ Details
 Similar projects
 ----------------
 
+* `pipx`_
 * `Zapper`_
 
 
@@ -129,6 +130,7 @@ Outside of a Python virtual environment run the following command::
 .. _`GNU Make`: https://www.gnu.org/software/make/
 .. _`GNU Stow`: https://www.gnu.org/software/stow/
 .. _`pex`: https://pypi.org/project/pex/
+.. _`pipx`: https://pipxproject.github.io/pipx/
 .. _`pytest`: https://pytest.org/
 .. _`shiv`: https://pypi.org/project/shiv/
 .. _`tox`: https://tox.readthedocs.io/
