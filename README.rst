@@ -32,20 +32,20 @@ current working directory.
 
 .. code::
 
-    [http.pex]
+    [toolmaker.tool.pex:http.pex]
     entry_point = http.server
     output_file = http
     requirements =
 
-    [pipdeptree.zapp]
+    [toolmaker.tool.zapp:pipdeptree.zapp]
     entry_point = pipdeptree:main
     output_file = pipdeptree
     requirements =
         pipdeptree
         setuptools
 
-    [shiv.shiv]
-    console_script = shiv
+    [toolmaker.tool.shiv:shiv.shiv]
+    entry_point = shiv.cli:main
     output_file = shiv
     requirements =
         shiv

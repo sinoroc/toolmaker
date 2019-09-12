@@ -66,16 +66,17 @@ def main():
     args_parser = _create_args_parser(default_config_path)
     args = args_parser.parse_args()
 
-    config = None
+    raw_config = None
     if args.config:
         logger.info("Reading configuration from file '%s'", args.config)
-        config = configparser.ConfigParser()
+        raw_config = configparser.ConfigParser()
         try:
-            config.read_file(args.config)
+            raw_config.read_file(args.config)
         except configparser.Error as config_error:
             args_parser.error(config_error)
-    tools_names = config.sections()
+    config = core.parse_config(raw_config)
 
+    tools_names = list(config['tools'].keys())
     if not args.all:
         args_parser = _create_args_parser(default_config_path, tools_names)
         args = args_parser.parse_args()
