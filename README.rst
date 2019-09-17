@@ -32,6 +32,8 @@ current working directory.
 
 .. code::
 
+    [toolmaker.tool.defaults]
+
     [toolmaker.tool.pex:http.pex]
     entry_point = http.server
     output_file = http

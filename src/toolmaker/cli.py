@@ -69,7 +69,9 @@ def main():
     raw_config = None
     if args.config:
         logger.info("Reading configuration from file '%s'", args.config)
-        raw_config = configparser.ConfigParser()
+        raw_config = configparser.ConfigParser(
+            default_section='toolmaker.tool.defaults',
+        )
         try:
             raw_config.read_file(args.config)
         except configparser.Error as config_error:
