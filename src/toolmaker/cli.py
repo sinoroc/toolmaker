@@ -71,6 +71,7 @@ def main():
         logger.info("Reading configuration from file '%s'", args.config)
         raw_config = configparser.ConfigParser(
             default_section='toolmaker.tool.defaults',
+            interpolation=configparser.ExtendedInterpolation(),
         )
         try:
             raw_config.read_file(args.config)
