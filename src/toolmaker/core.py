@@ -6,6 +6,7 @@
 
 
 import logging
+import os
 
 import pex
 import pex.bin.pex
@@ -59,6 +60,8 @@ def _get_requirements(config):
 def _get_output_file_path(work_dir_path, config):
     output_dir_path = work_dir_path.joinpath(config['name'])
     output_file_name = config['output_file']
+    if os.name == 'nt' and 'output_file_win' in config:
+        output_file_name = config['output_file_win']
     output_file_path = output_dir_path.joinpath(output_file_name)
     return output_file_path
 

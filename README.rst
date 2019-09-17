@@ -33,6 +33,7 @@ current working directory.
 .. code::
 
     [toolmaker.tool.defaults]
+    output_file_win = ${output_file}.pyz
 
     [toolmaker.tool.pex:http.pex]
     entry_point = http.server
