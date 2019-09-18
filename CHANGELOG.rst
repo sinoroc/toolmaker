@@ -2,8 +2,18 @@
 
 
 .. Keep the current version number on line number 5
-0.0.2.dev0
-==========
+0.0.2
+=====
+
+2019-09-18
+
+* Add namespaces in configuration file
+
+* Add support for default settings
+
+* Change interpolation in configuration files
+
+* Add support for Windows specific output file name
 
 
 0.0.1
