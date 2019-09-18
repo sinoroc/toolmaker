@@ -13,7 +13,7 @@ Repositories
 
 Binary distributions:
 
-* http://pypi.org/project/toolmaker/
+* https://pypi.org/project/toolmaker/
 
 Source code:
 
@@ -32,20 +32,23 @@ current working directory.
 
 .. code::
 
-    [http.pex]
+    [toolmaker.tool.defaults]
+    output_file_win = ${output_file}.pyz
+
+    [toolmaker.tool.pex:http.pex]
     entry_point = http.server
     output_file = http
     requirements =
 
-    [pipdeptree.zapp]
+    [toolmaker.tool.zapp:pipdeptree.zapp]
     entry_point = pipdeptree:main
     output_file = pipdeptree
     requirements =
         pipdeptree
         setuptools
 
-    [shiv.shiv]
-    console_script = shiv
+    [toolmaker.tool.shiv:shiv.shiv]
+    entry_point = shiv.cli:main
     output_file = shiv
     requirements =
         shiv
@@ -77,6 +80,7 @@ Details
 Similar projects
 ----------------
 
+* `pipx`_
 * `Zapper`_
 
 
@@ -129,6 +133,7 @@ Outside of a Python virtual environment run the following command::
 .. _`GNU Make`: https://www.gnu.org/software/make/
 .. _`GNU Stow`: https://www.gnu.org/software/stow/
 .. _`pex`: https://pypi.org/project/pex/
+.. _`pipx`: https://pipxproject.github.io/pipx/
 .. _`pytest`: https://pytest.org/
 .. _`shiv`: https://pypi.org/project/shiv/
 .. _`tox`: https://tox.readthedocs.io/

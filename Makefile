@@ -14,7 +14,7 @@ develop:
 
 
 .PHONY: package
-package: sdist wheel zapp
+package: sdist wheel pex
 
 
 .PHONY: sdist
@@ -29,9 +29,9 @@ wheel:
 	python3 -m twine check dist/*.whl
 
 
-.PHONY: zapp
-zapp:
-	python3 setup.py bdist_zapp
+.PHONY: pex
+pex:
+	python3 setup.py bdist_pex
 
 
 .PHONY: check
