@@ -41,12 +41,12 @@ check:
 
 .PHONY: lint
 lint:
-	python3 -m pytest --pep8 --pylint -m 'pep8 or pylint'
+	python3 -m pytest --codestyle --pylint -m 'codestyle or pylint'
 
 
-.PHONY: pep8
-pep8:
-	python3 -m pytest --pep8 -m pep8
+.PHONY: pycodestyle
+pycodestyle:
+	python3 -m pytest --codestyle -m codestyle
 
 
 .PHONY: pylint
@@ -65,7 +65,7 @@ pytest:
 
 .PHONY: review
 review: check
-	python3 -m pytest --pep8 --pylint
+	python3 -m pytest --codestyle --pylint
 
 
 .PHONY: clean
