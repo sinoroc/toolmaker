@@ -7,7 +7,9 @@
 import importlib_metadata
 
 
-VERSION = importlib_metadata.version('toolmaker')
+PROJECT_NAME = 'toolmaker'
+
+VERSION = importlib_metadata.version(PROJECT_NAME)
 
 
 # EOF
