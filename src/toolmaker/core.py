@@ -14,6 +14,8 @@ import shiv
 import shiv.cli
 import zapp
 
+from . import _meta
+
 
 LOGGER = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -112,9 +114,9 @@ def _build_zapp(work_dir_path, config, force):
 
 
 TOOL_SECTION_NAMES = (
-    'toolmaker.tool.pex',
-    'toolmaker.tool.shiv',
-    'toolmaker.tool.zapp',
+    '{}.tool.pex'.format(_meta.PROJECT_NAME),
+    '{}.tool.shiv'.format(_meta.PROJECT_NAME),
+    '{}.tool.zapp'.format(_meta.PROJECT_NAME),
 )
 
 

@@ -61,7 +61,8 @@ def main():
     logging.basicConfig(level=logging.INFO)
 
     cwd_path = pathlib.Path.cwd()
-    default_config_path = cwd_path.joinpath('toolmaker.cfg')
+    default_config_file_name = '{}.cfg'.format(_meta.PROJECT_NAME)
+    default_config_path = cwd_path.joinpath(default_config_file_name)
 
     args_parser = _create_args_parser(default_config_path)
     args = args_parser.parse_args()
@@ -70,7 +71,7 @@ def main():
     if args.config:
         logger.info("Reading configuration from file '%s'", args.config)
         raw_config = configparser.ConfigParser(
-            default_section='toolmaker.tool.defaults',
+            default_section='{}.tool.defaults'.format(_meta.PROJECT_NAME),
             interpolation=configparser.ExtendedInterpolation(),
         )
         try:
