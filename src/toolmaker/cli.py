@@ -9,8 +9,8 @@ import configparser
 import logging
 import pathlib
 
+from . import _meta
 from . import core
-from . import meta
 
 
 def _create_args_parser(default_config_path, tools_names=None):
@@ -20,7 +20,7 @@ def _create_args_parser(default_config_path, tools_names=None):
     args_parser.add_argument(
         '--version',
         action='version',
-        version=meta.VERSION,
+        version=_meta.VERSION,
     )
     args_parser.add_argument(
         '--config', '-c',
