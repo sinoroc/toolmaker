@@ -7,7 +7,6 @@
 import argparse
 import configparser
 import logging
-import pathlib
 
 from . import _meta
 from . import core
@@ -60,9 +59,7 @@ def main():
     logger = logging.getLogger(__name__)
     logging.basicConfig(level=logging.INFO)
 
-    cwd_path = pathlib.Path.cwd()
-    default_config_file_name = '{}.cfg'.format(_meta.PROJECT_NAME)
-    default_config_path = cwd_path.joinpath(default_config_file_name)
+    default_config_path = core.get_default_config_file_path()
 
     args_parser = _create_args_parser(default_config_path)
     args = args_parser.parse_args()
