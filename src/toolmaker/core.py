@@ -205,4 +205,27 @@ def delete(config, tools_names):
                         raise
 
 
+def get_default_config_file_path():
+    """ Get default path for configuration file
+        Depends on the operating system.
+    """
+    file_name = 'toolmaker.cfg'
+    dir_name = _meta.PROJECT_NAME
+    path = None
+    config_path = None
+    if os.name == 'nt':
+        if 'APPDATA' in os.environ:
+            config_path = pathlib.Path(os.environ['APPDATA'])
+        else:
+            config_path = pathlib.Path.home().joinpath('AppData', 'Roaming')
+    elif os.name == 'posix':
+        if 'XDG_CONFIG_HOME' in os.environ:
+            config_path = pathlib.Path(os.environ['XDG_CONFIG_HOME'])
+        else:
+            config_path = pathlib.Path.home().joinpath('.config')
+    if config_path:
+        path = config_path.joinpath(dir_name, file_name)
+    return path
+
+
 # EOF

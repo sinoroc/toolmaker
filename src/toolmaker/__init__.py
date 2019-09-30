@@ -5,6 +5,7 @@
 
 
 from . import _meta
+from . import core
 
 
 # PEP 396
