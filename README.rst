@@ -34,6 +34,7 @@ current working directory.
 
     [toolmaker.tool.defaults]
     output_file_win = ${output_file}.pyz
+    tools_directory = ~/bin/.toolmaker
 
     [toolmaker.tool.zapp:deptree.zapp]
     entry_point = deptree.cli:main
