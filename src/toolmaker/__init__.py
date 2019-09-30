@@ -4,11 +4,12 @@
 """ Module initializer """
 
 
-from . import meta
+from . import _meta
+from . import core
 
 
 # PEP 396
-__version__ = meta.VERSION
+__version__ = _meta.VERSION
 
 
 # EOF

@@ -34,18 +34,18 @@ current working directory.
 
     [toolmaker.tool.defaults]
     output_file_win = ${output_file}.pyz
+    tools_directory = ~/bin/.toolmaker
+
+    [toolmaker.tool.zapp:deptree.zapp]
+    entry_point = deptree.cli:main
+    output_file = deptree
+    requirements =
+        deptree
 
     [toolmaker.tool.pex:http.pex]
     entry_point = http.server
     output_file = http
     requirements =
-
-    [toolmaker.tool.zapp:pipdeptree.zapp]
-    entry_point = pipdeptree:main
-    output_file = pipdeptree
-    requirements =
-        pipdeptree
-        setuptools
 
     [toolmaker.tool.shiv:shiv.shiv]
     entry_point = shiv.cli:main
@@ -80,6 +80,7 @@ Details
 Similar projects
 ----------------
 
+* `pickley`_
 * `pipx`_
 * `Zapper`_
 
@@ -133,6 +134,7 @@ Outside of a Python virtual environment run the following command::
 .. _`GNU Make`: https://www.gnu.org/software/make/
 .. _`GNU Stow`: https://www.gnu.org/software/stow/
 .. _`pex`: https://pypi.org/project/pex/
+.. _`pickley`: https://pypi.org/project/pickley/
 .. _`pipx`: https://pipxproject.github.io/pipx/
 .. _`pytest`: https://pytest.org/
 .. _`shiv`: https://pypi.org/project/shiv/

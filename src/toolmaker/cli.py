@@ -7,10 +7,9 @@
 import argparse
 import configparser
 import logging
-import pathlib
 
+from . import _meta
 from . import core
-from . import meta
 
 
 def _create_args_parser(default_config_path, tools_names=None):
@@ -20,7 +19,7 @@ def _create_args_parser(default_config_path, tools_names=None):
     args_parser.add_argument(
         '--version',
         action='version',
-        version=meta.VERSION,
+        version=_meta.VERSION,
     )
     args_parser.add_argument(
         '--config', '-c',
@@ -60,8 +59,7 @@ def main():
     logger = logging.getLogger(__name__)
     logging.basicConfig(level=logging.INFO)
 
-    cwd_path = pathlib.Path.cwd()
-    default_config_path = cwd_path.joinpath('toolmaker.cfg')
+    default_config_path = core.get_default_config_file_path()
 
     args_parser = _create_args_parser(default_config_path)
     args = args_parser.parse_args()
@@ -70,7 +68,7 @@ def main():
     if args.config:
         logger.info("Reading configuration from file '%s'", args.config)
         raw_config = configparser.ConfigParser(
-            default_section='toolmaker.tool.defaults',
+            default_section='{}.tool.defaults'.format(_meta.PROJECT_NAME),
             interpolation=configparser.ExtendedInterpolation(),
         )
         try:
@@ -88,11 +86,11 @@ def main():
         tools_names = args.tools
 
     if args.delete:
-        core.delete(cwd_path, config, tools_names)
+        core.delete(config, tools_names)
     elif args.rebuild:
-        core.build(cwd_path, config, tools_names, force=True)
+        core.build(config, tools_names, force=True)
     else:
-        core.build(cwd_path, config, tools_names)
+        core.build(config, tools_names)
 
 
 # EOF
