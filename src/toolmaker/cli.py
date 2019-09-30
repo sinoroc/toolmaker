@@ -89,11 +89,11 @@ def main():
         tools_names = args.tools
 
     if args.delete:
-        core.delete(cwd_path, config, tools_names)
+        core.delete(config, tools_names)
     elif args.rebuild:
-        core.build(cwd_path, config, tools_names, force=True)
+        core.build(config, tools_names, force=True)
     else:
-        core.build(cwd_path, config, tools_names)
+        core.build(config, tools_names)
 
 
 # EOF

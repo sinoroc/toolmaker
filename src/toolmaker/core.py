@@ -7,6 +7,7 @@
 
 import logging
 import os
+import pathlib
 
 import pex
 import pex.bin.pex
@@ -59,20 +60,26 @@ def _get_requirements(config):
     return requirements
 
 
-def _get_output_file_path(work_dir_path, config):
-    output_dir_path = work_dir_path.joinpath(config['name'])
-    output_file_name = config['output_file']
+def _get_file_path(config):
+    directory_path = (
+        pathlib.Path(
+            os.path.expandvars(config['tools_directory']),
+        ).expanduser()
+        if 'tools_directory' in config
+        else pathlib.Path.cwd()
+    )
+    file_name = config['output_file']
     if os.name == 'nt' and 'output_file_win' in config:
-        output_file_name = config['output_file_win']
-    output_file_path = output_dir_path.joinpath(output_file_name)
-    return output_file_path
+        file_name = config['output_file_win']
+    file_path = directory_path.joinpath(config['name'], file_name)
+    return file_path
 
 
-def _build_pex(work_dir_path, config, force):
+def _build_pex(config, force):
     """ Build pex
     """
     tool_name = config['name']
-    output_file_path = _get_output_file_path(work_dir_path, config)
+    output_file_path = _get_file_path(config)
     if force or not output_file_path.exists():
         LOGGER.info("Building pex tool '%s'...", tool_name)
         requirements = _get_requirements(config)
@@ -83,11 +90,11 @@ def _build_pex(work_dir_path, config, force):
         LOGGER.info("Tool '%s' already exists, build skipped", tool_name)
 
 
-def _build_shiv(work_dir_path, config, force):
+def _build_shiv(config, force):
     """ Build shiv
     """
     tool_name = config['name']
-    output_file_path = _get_output_file_path(work_dir_path, config)
+    output_file_path = _get_file_path(config)
     if force or not output_file_path.exists():
         LOGGER.info("Building shiv tool '%s'...", tool_name)
         requirements = _get_requirements(config)
@@ -98,11 +105,11 @@ def _build_shiv(work_dir_path, config, force):
         LOGGER.info("Tool '%s' already exists, build skipped", tool_name)
 
 
-def _build_zapp(work_dir_path, config, force):
+def _build_zapp(config, force):
     """ Build zapp
     """
     tool_name = config['name']
-    output_file_path = _get_output_file_path(work_dir_path, config)
+    output_file_path = _get_file_path(config)
     if force or not output_file_path.exists():
         LOGGER.info("Building zapp tool '%s'...", tool_name)
         requirements = _get_requirements(config)
@@ -145,7 +152,7 @@ def parse_config(raw_config):
     return config
 
 
-def build(work_dir_path, config, tools_names, force=False):
+def build(config, tools_names, force=False):
     """ Build tools
     """
     LOGGER.info("Building tools %s...", tools_names)
@@ -155,25 +162,22 @@ def build(work_dir_path, config, tools_names, force=False):
             tool_config = config['tools'][tool_name]
             if tool_config['type'] == 'pex':
                 _build_pex(
-                    work_dir_path,
                     tool_config,
                     force,
                 )
             if tool_config['type'] == 'shiv':
                 _build_shiv(
-                    work_dir_path,
                     tool_config,
                     force,
                 )
             if tool_config['type'] == 'zapp':
                 _build_zapp(
-                    work_dir_path,
                     tool_config,
                     force,
                 )
 
 
-def delete(work_dir_path, config, tools_names):
+def delete(config, tools_names):
     """ Delete tools
     """
     LOGGER.info("Deleting tools %s...", tools_names)
@@ -181,10 +185,7 @@ def delete(work_dir_path, config, tools_names):
     for tool_name in tools_names:
         if tool_name in config['tools']:
             tool_config = config['tools'][tool_name]
-            output_file_path = _get_output_file_path(
-                work_dir_path,
-                tool_config,
-            )
+            output_file_path = _get_file_path(tool_config)
             if output_file_path.exists() and output_file_path.is_file():
                 LOGGER.info("Deleting file '%s'", output_file_path)
                 output_file_path.unlink()
