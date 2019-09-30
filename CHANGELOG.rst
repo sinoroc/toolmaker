@@ -2,8 +2,15 @@
 
 
 .. Keep the current version number on line number 5
-0.0.3.dev0
-==========
+0.0.3
+=====
+
+2019-09-30
+
+* Add support for `tools_directory` setting
+
+* Use operating system's standard value for default location of the
+  configuration file
 
 
 0.0.2
