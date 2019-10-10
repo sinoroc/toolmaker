@@ -11,7 +11,7 @@
 
 2019-09-30
 
-* Add support for `tools_directory` setting
+* Add support for ``tools_directory`` setting
 
 * Use operating system's standard value for default location of the
   configuration file
