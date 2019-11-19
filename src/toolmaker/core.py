@@ -5,6 +5,7 @@
 """
 
 
+import errno
 import logging
 import os
 import pathlib
@@ -195,7 +196,6 @@ def delete(config, tools_names):
                 try:
                     output_dir_path.rmdir()
                 except OSError as ose:
-                    import errno
                     if ose.errno == errno.ENOTEMPTY:
                         LOGGER.warning(
                             "Directory '%s' not empty",
