@@ -5,6 +5,8 @@
 0.0.4.dev0
 ==========
 
+* Rewrite naming scheme for output files
+
 
 0.0.3
 =====
