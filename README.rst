@@ -27,8 +27,11 @@ Usage
 Configuration
 -------------
 
-By default this tool looks for a configuration file ``toolmaker.cfg`` in the
-current working directory.
+By default this tool looks for a configuration file at the following location:
+
+* ``${HOME}/.config/toolmaker/toolmaker.cfg`` on *Linux*
+
+* ``%USERPROFILE%\AppData\Roaming\toolmaker\toolmaker.cfg`` on *Windows*
 
 .. code::
 
