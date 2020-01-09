@@ -5,11 +5,13 @@
 """
 
 
+import configparser
+import errno
 import logging
 import os
 import pathlib
+import platform
 
-import pex
 import pex.bin.pex
 import shiv
 import shiv.cli
@@ -20,6 +22,10 @@ from . import _meta
 
 LOGGER = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
+
+
+class ConfigurationFileError(configparser.Error):
+    """Configuration file error"""
 
 
 def _pex(requirements, entry_point, output_file_path):
@@ -61,18 +67,30 @@ def _get_requirements(config):
 
 
 def _get_file_path(config):
-    directory_path = (
+    path = (
         pathlib.Path(
             os.path.expandvars(config['tools_directory']),
         ).expanduser()
         if 'tools_directory' in config
         else pathlib.Path.cwd()
     )
-    file_name = config['output_file']
-    if os.name == 'nt' and 'output_file_win' in config:
-        file_name = config['output_file_win']
-    file_path = directory_path.joinpath(config['name'], file_name)
-    return file_path
+
+    if 'tool_directory' in config:
+        tool_directory_name = config['tool_directory']
+        if tool_directory_name:
+            path = path.joinpath(tool_directory_name)
+    else:
+        path = path.joinpath(config['name'])
+
+    if 'tool_file' in config:
+        path = path.joinpath(config['tool_file'])
+    else:
+        path = path.joinpath(config['name'])
+
+    if platform.system() == 'Windows':
+        path = path.with_suffix('.pyz')
+
+    return path
 
 
 def _build_pex(config, force):
@@ -139,16 +157,31 @@ def _parse_tool_config(raw_config, section_name):
     return tool_config
 
 
-def parse_config(raw_config):
-    """ Parse the raw configration file to build a configuration dictionary.
+def parse_config(config_file):
+    """ Parse the configuration file to build a configuration dictionary
     """
-    config = {
-        'tools': {},
-    }
-    for section_name in raw_config.sections():
-        tool_config = _parse_tool_config(raw_config, section_name)
-        if tool_config:
-            config['tools'][tool_config['name']] = tool_config
+    config = None
+    raw_config = configparser.ConfigParser(
+        default_section='{}.tool.defaults'.format(_meta.PROJECT_NAME),
+        interpolation=configparser.ExtendedInterpolation(),
+    )
+    try:
+        LOGGER.info("Read configuration from '%s'", config_file.name)
+        raw_config.read_file(config_file)
+    except configparser.Error as config_error:
+        LOGGER.error(
+            "Can not read configuration from file '%s'",
+            config_file.name,
+        )
+        raise ConfigurationFileError(str(config_error))
+    else:
+        config = {
+            'tools': {},
+        }
+        for section_name in raw_config.sections():
+            tool_config = _parse_tool_config(raw_config, section_name)
+            if tool_config:
+                config['tools'][tool_config['name']] = tool_config
     return config
 
 
@@ -195,7 +228,6 @@ def delete(config, tools_names):
                 try:
                     output_dir_path.rmdir()
                 except OSError as ose:
-                    import errno
                     if ose.errno == errno.ENOTEMPTY:
                         LOGGER.warning(
                             "Directory '%s' not empty",
@@ -213,12 +245,13 @@ def get_default_config_file_path():
     dir_name = _meta.PROJECT_NAME
     path = None
     config_path = None
-    if os.name == 'nt':
+    system = platform.system()
+    if system == 'Windows':
         if 'APPDATA' in os.environ:
             config_path = pathlib.Path(os.environ['APPDATA'])
         else:
             config_path = pathlib.Path.home().joinpath('AppData', 'Roaming')
-    elif os.name == 'posix':
+    elif system == 'Linux':
         if 'XDG_CONFIG_HOME' in os.environ:
             config_path = pathlib.Path(os.environ['XDG_CONFIG_HOME'])
         else:

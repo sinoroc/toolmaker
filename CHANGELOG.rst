@@ -2,12 +2,20 @@
 
 
 .. Keep the current version number on line number 5
+0.0.4
+=====
+
+20120-01-09
+
+* Rewrite naming scheme for output files
+
+
 0.0.3
 =====
 
 2019-09-30
 
-* Add support for `tools_directory` setting
+* Add support for ``tools_directory`` setting
 
 * Use operating system's standard value for default location of the
   configuration file

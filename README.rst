@@ -33,23 +33,19 @@ current working directory.
 .. code::
 
     [toolmaker.tool.defaults]
-    output_file_win = ${output_file}.pyz
-    tools_directory = ~/bin/.toolmaker
+    tools_directory = ~/.local/bin/.toolmaker
 
-    [toolmaker.tool.zapp:deptree.zapp]
+    [toolmaker.tool.zapp:deptree]
     entry_point = deptree.cli:main
-    output_file = deptree
     requirements =
         deptree
 
-    [toolmaker.tool.pex:http.pex]
+    [toolmaker.tool.pex:http]
     entry_point = http.server
-    output_file = http
     requirements =
 
-    [toolmaker.tool.shiv:shiv.shiv]
+    [toolmaker.tool.shiv:shiv]
     entry_point = shiv.cli:main
-    output_file = shiv
     requirements =
         shiv
 
@@ -67,11 +63,88 @@ The action can be specified on the command line. Either one of:
 The default action when no flag is specified is to build the tools.
 
 
-Tips
-----
+Configuration
+=============
 
-Place in a subdirectory of a directory that is available on your ``PATH``
-(typically your ``~/bin`` directory) and use in combination with `GNU Stow`_.
+Place tools in current directory
+--------------------------------
+
+.. code::
+
+    [toolmaker.tool.defaults]
+    tools_directory =
+    tool_directory =
+
+    [toolmaker.tool.zapp:foo]
+    # ./foo
+
+    [toolmaker.tool.zapp:bar]
+    # ./bar
+
+
+Place tools in specific directory
+---------------------------------
+
+.. code::
+
+    [toolmaker.tool.defaults]
+    tools_directory = /somewhere
+    tool_directory =
+
+    [toolmaker.tool.zapp:foo]
+    # /somewhere/foo
+
+    [toolmaker.tool.zapp:bar]
+    # /somewhere/bar
+
+
+Place tools in subdirectories
+-----------------------------
+
+.. code::
+
+    [toolmaker.tool.defaults]
+    tools_directory = /somewhere
+
+    [toolmaker.tool.zapp:foo0]
+    # /somewhere/foo0/foo0
+
+    [toolmaker.tool.zapp:foo1]
+    tool_directory = foo0
+    # /somewhere/foo0/foo1
+
+    [toolmaker.tool.zapp:foo2]
+    # /somewhere/foo2/foo2
+
+    [toolmaker.tool.zapp:foo3]
+    tool_file = foo0
+    # /somewhere/foo3/foo0
+
+
+Example to use with GNU stow
+----------------------------
+
+To use in combination with `GNU Stow`_:
+
+.. code::
+
+    [toolmaker.tool.defaults]
+    tools_directory = ~/.local/bin/.toolmaker
+
+    [toolmaker.tool.zapp:foo0]
+    # ~/.local/bin/.toolmaker/foo0/foo0
+
+    [toolmaker.tool.zapp:foo1]
+    tool_directory = foo0
+    # ~/.local/bin/.toolmaker/foo0/foo1
+
+    [toolmaker.tool.zapp:foo2]
+    # ~/.local/bin/.toolmaker/foo2/foo2
+
+    [toolmaker.tool.zapp:foo3]
+    tool_file = foo0
+    # ~/.local/bin/.toolmaker/foo3/foo0
+
 
 
 Details

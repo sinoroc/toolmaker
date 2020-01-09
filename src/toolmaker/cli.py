@@ -5,8 +5,6 @@
 
 
 import argparse
-import configparser
-import logging
 
 from . import _meta
 from . import core
@@ -56,41 +54,35 @@ def _create_args_parser(default_config_path, tools_names=None):
 def main():
     """ CLI main function
     """
-    logger = logging.getLogger(__name__)
-    logging.basicConfig(level=logging.INFO)
-
     default_config_path = core.get_default_config_file_path()
 
     args_parser = _create_args_parser(default_config_path)
     args = args_parser.parse_args()
 
-    raw_config = None
+    config = None
     if args.config:
-        logger.info("Reading configuration from file '%s'", args.config)
-        raw_config = configparser.ConfigParser(
-            default_section='{}.tool.defaults'.format(_meta.PROJECT_NAME),
-            interpolation=configparser.ExtendedInterpolation(),
-        )
         try:
-            raw_config.read_file(args.config)
-        except configparser.Error as config_error:
+            config = core.parse_config(args.config)
+        except core.ConfigurationFileError as config_error:
             args_parser.error(config_error)
-    config = core.parse_config(raw_config)
+        else:
+            tools_names = list(config['tools'].keys())
+            if not args.all:
+                args_parser = _create_args_parser(
+                    default_config_path,
+                    tools_names,
+                )
+                args = args_parser.parse_args()
 
-    tools_names = list(config['tools'].keys())
-    if not args.all:
-        args_parser = _create_args_parser(default_config_path, tools_names)
-        args = args_parser.parse_args()
+            if args.tools:
+                tools_names = args.tools
 
-    if args.tools:
-        tools_names = args.tools
-
-    if args.delete:
-        core.delete(config, tools_names)
-    elif args.rebuild:
-        core.build(config, tools_names, force=True)
-    else:
-        core.build(config, tools_names)
+            if args.delete:
+                core.delete(config, tools_names)
+            elif args.rebuild:
+                core.build(config, tools_names, force=True)
+            else:
+                core.build(config, tools_names)
 
 
 # EOF
