@@ -4,8 +4,7 @@
 Introduction
 ============
 
-This tool automates the build of Python tools according to a configuration
-file. The tools can be built with `zapp`_, `shiv`_, or `pex`_.
+Make single-file builds of Python tools using `zapp`_, `shiv`_, or `pex`_.
 
 
 Repositories
