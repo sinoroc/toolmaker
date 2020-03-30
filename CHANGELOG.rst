@@ -2,16 +2,20 @@
 
 
 .. Keep the current version number on line number 5
-0.0.5.dev0
-==========
+0.0.5
+=====
 
+2020-03-30
+
+* Update 'zapp' to version '0.0.6'
 * Fix call to main entry point of 'shiv'
+* Add help messages for CLI options
 
 
 0.0.4
 =====
 
-20120-01-09
+2020-01-09
 
 * Rewrite naming scheme for output files
 
