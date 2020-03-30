@@ -54,7 +54,11 @@ def _shiv(requirements, entry_point, output_file_path):
 
 
 def _zapp(requirements, entry_point, output_file_path):
-    zapp.core.build_zapp(requirements, entry_point, output_file_path)
+    zapp.core.build_zapp(
+        output_file_path,
+        entry_point,
+        requirements=requirements,
+    )
 
 
 def _get_requirements(config):
