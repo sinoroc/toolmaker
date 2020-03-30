@@ -6,8 +6,12 @@
 
 import argparse
 
+from . import _i18n
 from . import _meta
 from . import core
+
+
+_ = _i18n._
 
 
 def _create_args_parser(default_config_path, tools_names=None):
@@ -22,29 +26,35 @@ def _create_args_parser(default_config_path, tools_names=None):
     args_parser.add_argument(
         '--config', '-c',
         default=str(default_config_path),
+        help=_("configuration file (default: {})").format(default_config_path),
         type=argparse.FileType('r'),
     )
     action_group = args_parser.add_mutually_exclusive_group()
     action_group.add_argument(
         '--build', '-b',
         action='store_true',
+        help=_("build selected tool(s)"),
     )
     action_group.add_argument(
         '--rebuild', '-r',
         action='store_true',
+        help=_("rebuild selected tool(s)"),
     )
     action_group.add_argument(
         '--delete', '-d',
         action='store_true',
+        help=_("delete selected tool(s)"),
     )
     tools_group = args_parser.add_mutually_exclusive_group(required=True)
     tools_group.add_argument(
         '--all', '-a',
         action='store_true',
+        help=_("apply action on all tools"),
     )
     tools_group.add_argument(
         '--tools', '-t',
         choices=tools_names,
+        help=_("apply action on this list of tools"),
         metavar='tool',
         nargs='+',
     )

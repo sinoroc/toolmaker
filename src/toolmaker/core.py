@@ -39,22 +39,23 @@ def _pex(requirements, entry_point, output_file_path):
 def _shiv(requirements, entry_point, output_file_path):
     # Since it is decorated by 'click', the 'main' function is not callable
     # with its original arguments. The original function is "hidden" under
-    # 'callback'.
-    shiv.cli.main.callback(
-        str(output_file_path),  # output_file
-        entry_point,  # entry_point
-        None,  # console_script
-        '/usr/bin/env python3',  # python
-        None,  # site_packages
-        True,  # compressed
-        False,  # compile_pyc
-        False,  # extend_pythonpath
-        requirements,  # pip_args
+    # 'shiv.cli.main.callback', and 'shiv.cli.main' takes the equivalent of
+    # 'sys.argv' instead.
+    shiv.cli.main(  # pylint: disable=no-value-for-parameter
+        [
+            '--output-file', str(output_file_path),
+            '--entry-point', entry_point,  # entry_point
+            '--python', '/usr/bin/env python3',
+        ] + requirements,
     )
 
 
 def _zapp(requirements, entry_point, output_file_path):
-    zapp.core.build_zapp(requirements, entry_point, output_file_path)
+    zapp.core.build_zapp(
+        output_file_path,
+        entry_point,
+        requirements=requirements,
+    )
 
 
 def _get_requirements(config):

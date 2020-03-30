@@ -4,8 +4,7 @@
 Introduction
 ============
 
-This tool automates the build of Python tools according to a configuration
-file. The tools can be built with `zapp`_, `shiv`_, or `pex`_.
+Make single-file builds of Python tools using `zapp`_, `shiv`_, or `pex`_.
 
 
 Repositories
@@ -27,8 +26,11 @@ Usage
 Configuration
 -------------
 
-By default this tool looks for a configuration file ``toolmaker.cfg`` in the
-current working directory.
+By default this tool looks for a configuration file at the following location:
+
+* ``${HOME}/.config/toolmaker/toolmaker.cfg`` on *Linux*
+
+* ``%USERPROFILE%\AppData\Roaming\toolmaker\toolmaker.cfg`` on *Windows*
 
 .. code::
 
@@ -158,60 +160,13 @@ Similar projects
 * `Zapper`_
 
 
-Hacking
-=======
-
-This project makes extensive use of `tox`_, `pytest`_, and `GNU Make`_.
-
-
-Development environment
------------------------
-
-Use following command to create a Python virtual environment with all
-necessary dependencies::
-
-    tox --recreate -e develop
-
-This creates a Python virtual environment in the ``.tox/develop`` directory. It
-can be activated with the following command::
-
-    . .tox/develop/bin/activate
-
-
-Run test suite
---------------
-
-In a Python virtual environment run the following command::
-
-    make review
-
-Outside of a Python virtual environment run the following command::
-
-    tox --recreate
-
-
-Build and package
------------------
-
-In a Python virtual environment run the following command::
-
-    make package
-
-Outside of a Python virtual environment run the following command::
-
-    tox --recreate -e package
-
-
 .. Links
 
-.. _`GNU Make`: https://www.gnu.org/software/make/
 .. _`GNU Stow`: https://www.gnu.org/software/stow/
 .. _`pex`: https://pypi.org/project/pex/
 .. _`pickley`: https://pypi.org/project/pickley/
 .. _`pipx`: https://pipxproject.github.io/pipx/
-.. _`pytest`: https://pytest.org/
 .. _`shiv`: https://pypi.org/project/shiv/
-.. _`tox`: https://tox.readthedocs.io/
 .. _`zapp`: https://pypi.org/project/zapp/
 .. _`Zapper`: https://github.com/Valassis-Digital-Media/Zapper
 
