@@ -162,6 +162,7 @@ Similar projects
 
 .. Links
 
+.. _`GNU Stow`: https://www.gnu.org/software/stow/
 .. _`pex`: https://pypi.org/project/pex/
 .. _`pickley`: https://pypi.org/project/pickley/
 .. _`pipx`: https://pipxproject.github.io/pipx/
