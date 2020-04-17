@@ -17,6 +17,7 @@ _ = _i18n._
 def _create_args_parser(default_config_path, tools_names=None):
     args_parser = argparse.ArgumentParser(
         allow_abbrev=False,
+        description=_meta.SUMMARY,
     )
     args_parser.add_argument(
         '--version',
