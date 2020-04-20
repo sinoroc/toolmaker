@@ -11,6 +11,7 @@ import logging
 import os
 import pathlib
 import platform
+import tempfile
 
 import pex.bin.pex
 import shiv
@@ -28,65 +29,100 @@ class ConfigurationFileError(configparser.Error):
     """Configuration file error"""
 
 
-def _pex(requirements, entry_point, output_file_path):
-    cmd = [
+def _pex(requirements_txts, entry_point, output_file_path):
+    command = [
         '--entry-point={}'.format(entry_point),
         '--output-file={}'.format(str(output_file_path)),
-    ] + requirements
-    pex.bin.pex.main(cmd)
+    ] + [
+        '--requirement={}'.format(requirements_txt)
+        for requirements_txt
+        in requirements_txts
+    ]
+    pex.bin.pex.main(command)
 
 
-def _shiv(requirements, entry_point, output_file_path):
+def _shiv(requirements_txts, entry_point, output_file_path):
+    pip_args = []
+    for requirements_txt in requirements_txts:
+        pip_args.extend(
+            [
+                '--requirement',
+                requirements_txt,
+            ],
+        )
     # Since it is decorated by 'click', the 'main' function is not callable
     # with its original arguments. The original function is "hidden" under
-    # 'shiv.cli.main.callback', and 'shiv.cli.main' takes the equivalent of
-    # 'sys.argv' instead.
-    shiv.cli.main(  # pylint: disable=no-value-for-parameter
-        [
-            '--output-file', str(output_file_path),
-            '--entry-point', entry_point,  # entry_point
-            '--python', '/usr/bin/env python3',
-        ] + requirements,
+    # 'shiv.cli.main.callback'. And 'shiv.cli.main' takes the equivalent of
+    # 'sys.argv' instead, but running it causes the whole application to exit
+    # at the end of the 'shiv.cli.main' function call.
+    shiv.cli.main.callback(
+        output_file=str(output_file_path),
+        entry_point=entry_point,
+        console_script=None,
+        python='/usr/bin/env python3',
+        site_packages=None,
+        compressed=False,
+        compile_pyc=False,
+        extend_pythonpath=False,
+        reproducible=False,
+        pip_args=pip_args,
     )
 
 
-def _zapp(requirements, entry_point, output_file_path):
+def _zapp(requirements_txts, entry_point, output_file_path):
     zapp.core.build_zapp(
         output_file_path,
         entry_point,
-        requirements=requirements,
+        requirements_txts=requirements_txts,
     )
 
 
-def _get_requirements(config):
-    requirements = [
-        req.strip()
-        for req in config['requirements'].splitlines()
-        if req.strip()
-    ]
-    return requirements
+def _get_requirements_txts(tool_config, temp_requirements_txt):
+    requirements_txts = []
+    #
+    requirements = tool_config.get('requirements', None)
+    if requirements:
+        temp_requirements_txt.write(requirements)
+        temp_requirements_txt.flush()
+        requirements_txts.append(temp_requirements_txt.name)
+    #
+    for line in tool_config.get('requirements_txts', '').splitlines():
+        stripped_line = line.strip()
+        if stripped_line:
+            requirements_txt_path = pathlib.Path(stripped_line)
+            requirements_txts.append(
+                str(requirements_txt_path)
+                if requirements_txt_path.is_absolute()
+                else str(
+                    tool_config['configuration_directory'].joinpath(
+                        requirements_txt_path,
+                    )
+                )
+            )
+    #
+    return requirements_txts
 
 
-def _get_file_path(config):
+def _get_file_path(tool_config):
     path = (
         pathlib.Path(
-            os.path.expandvars(config['tools_directory']),
+            os.path.expandvars(tool_config['tools_directory']),
         ).expanduser()
-        if 'tools_directory' in config
+        if 'tools_directory' in tool_config
         else pathlib.Path.cwd()
     )
 
-    if 'tool_directory' in config:
-        tool_directory_name = config['tool_directory']
+    if 'tool_directory' in tool_config:
+        tool_directory_name = tool_config['tool_directory']
         if tool_directory_name:
             path = path.joinpath(tool_directory_name)
     else:
-        path = path.joinpath(config['name'])
+        path = path.joinpath(tool_config['name'])
 
-    if 'tool_file' in config:
-        path = path.joinpath(config['tool_file'])
+    if 'tool_file' in tool_config:
+        path = path.joinpath(tool_config['tool_file'])
     else:
-        path = path.joinpath(config['name'])
+        path = path.joinpath(tool_config['name'])
 
     if platform.system() == 'Windows':
         path = path.with_suffix('.pyz')
@@ -94,47 +130,59 @@ def _get_file_path(config):
     return path
 
 
-def _build_pex(config, force):
+def _build_pex(tool_config, force):
     """ Build pex
     """
-    tool_name = config['name']
-    output_file_path = _get_file_path(config)
+    tool_name = tool_config['name']
+    output_file_path = _get_file_path(tool_config)
     if force or not output_file_path.exists():
         LOGGER.info("Building pex tool '%s'...", tool_name)
-        requirements = _get_requirements(config)
-        entry_point = config['entry_point']
+        entry_point = tool_config['entry_point']
         output_file_path.parent.mkdir(exist_ok=True)
-        _pex(requirements, entry_point, output_file_path)
+        with tempfile.NamedTemporaryFile('w') as temp_requirements_txt:
+            requirements_txts = _get_requirements_txts(
+                tool_config,
+                temp_requirements_txt,
+            )
+            _pex(requirements_txts, entry_point, output_file_path)
     else:
         LOGGER.info("Tool '%s' already exists, build skipped", tool_name)
 
 
-def _build_shiv(config, force):
+def _build_shiv(tool_config, force):
     """ Build shiv
     """
-    tool_name = config['name']
-    output_file_path = _get_file_path(config)
+    tool_name = tool_config['name']
+    output_file_path = _get_file_path(tool_config)
     if force or not output_file_path.exists():
         LOGGER.info("Building shiv tool '%s'...", tool_name)
-        requirements = _get_requirements(config)
-        entry_point = config['entry_point']
+        entry_point = tool_config['entry_point']
         output_file_path.parent.mkdir(exist_ok=True)
-        _shiv(requirements, entry_point, output_file_path)
+        with tempfile.NamedTemporaryFile('w') as temp_requirements_txt:
+            requirements_txts = _get_requirements_txts(
+                tool_config,
+                temp_requirements_txt,
+            )
+            _shiv(requirements_txts, entry_point, output_file_path)
     else:
         LOGGER.info("Tool '%s' already exists, build skipped", tool_name)
 
 
-def _build_zapp(config, force):
+def _build_zapp(tool_config, force):
     """ Build zapp
     """
-    tool_name = config['name']
-    output_file_path = _get_file_path(config)
+    tool_name = tool_config['name']
+    output_file_path = _get_file_path(tool_config)
     if force or not output_file_path.exists():
         LOGGER.info("Building zapp tool '%s'...", tool_name)
-        requirements = _get_requirements(config)
-        entry_point = config['entry_point']
+        entry_point = tool_config['entry_point']
         output_file_path.parent.mkdir(exist_ok=True)
-        _zapp(requirements, entry_point, output_file_path)
+        with tempfile.NamedTemporaryFile('w') as temp_requirements_txt:
+            requirements_txts = _get_requirements_txts(
+                tool_config,
+                temp_requirements_txt,
+            )
+            _zapp(requirements_txts, entry_point, output_file_path)
     else:
         LOGGER.info("Tool '%s' already exists, build skipped", tool_name)
 
@@ -176,12 +224,17 @@ def parse_config(config_file):
         )
         raise ConfigurationFileError(str(config_error))
     else:
+        config_directory_path = pathlib.Path(config_file.name).resolve().parent
         config = {
             'tools': {},
         }
         for section_name in raw_config.sections():
-            tool_config = _parse_tool_config(raw_config, section_name)
+            tool_config = _parse_tool_config(
+                raw_config,
+                section_name,
+            )
             if tool_config:
+                tool_config['configuration_directory'] = config_directory_path
                 config['tools'][tool_config['name']] = tool_config
     return config
 

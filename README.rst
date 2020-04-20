@@ -44,12 +44,20 @@ By default this tool looks for a configuration file at the following location:
 
     [toolmaker.tool.pex:http]
     entry_point = http.server
-    requirements =
 
     [toolmaker.tool.shiv:shiv]
     entry_point = shiv.cli:main
     requirements =
         shiv
+
+    [toolmaker.tool.zapp:something]
+    entry_point = something.cli:main
+    requirements =
+        --no-index
+        SomeRandomProject --find-links /path/to/location
+    requirements_txts =
+        requirements.txt
+        more.txt
 
 
 Action
@@ -59,8 +67,8 @@ The action can be specified on the command line. Either one of:
 
 * ``--build``, ``-b`` to build (already existing tools are skipped);
 * ``--rebuild``, ``-r`` to rebuild (already existing tools are rebuilt);
-* ``--delete``, ``-d`` to delete (tool target file is deleted if it exists, then
-  its parent directory is deleted if it is empty).
+* ``--delete``, ``-d`` to delete (tool target file is deleted if it exists,
+  then its parent directory is deleted if it is empty).
 
 The default action when no flag is specified is to build the tools.
 
