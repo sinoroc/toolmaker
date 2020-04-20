@@ -6,6 +6,8 @@
 ==========
 
 * Add support for 'requirements.txt' files
+* Fix call to main entry point of 'shiv', somewhat revert the change introduced
+  in version '0.0.5'.
 
 
 0.0.5

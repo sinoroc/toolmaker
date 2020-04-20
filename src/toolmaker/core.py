@@ -42,13 +42,9 @@ def _pex(requirements_txts, entry_point, output_file_path):
 
 
 def _shiv(requirements_txts, entry_point, output_file_path):
-    command = [
-        '--output-file', str(output_file_path),
-        '--entry-point', entry_point,  # entry_point
-        '--python', '/usr/bin/env python3',
-    ]
+    pip_args = []
     for requirements_txt in requirements_txts:
-        command.extend(
+        pip_args.extend(
             [
                 '--requirement',
                 requirements_txt,
@@ -56,9 +52,21 @@ def _shiv(requirements_txts, entry_point, output_file_path):
         )
     # Since it is decorated by 'click', the 'main' function is not callable
     # with its original arguments. The original function is "hidden" under
-    # 'shiv.cli.main.callback', and 'shiv.cli.main' takes the equivalent of
-    # 'sys.argv' instead.
-    shiv.cli.main(command)  # pylint: disable=no-value-for-parameter
+    # 'shiv.cli.main.callback'. And 'shiv.cli.main' takes the equivalent of
+    # 'sys.argv' instead, but running it causes the whole application to exit
+    # at the end of the 'shiv.cli.main' function call.
+    shiv.cli.main.callback(
+        output_file=str(output_file_path),
+        entry_point=entry_point,
+        console_script=None,
+        python='/usr/bin/env python3',
+        site_packages=None,
+        compressed=False,
+        compile_pyc=False,
+        extend_pythonpath=False,
+        reproducible=False,
+        pip_args=pip_args,
+    )
 
 
 def _zapp(requirements_txts, entry_point, output_file_path):
