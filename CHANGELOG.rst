@@ -2,12 +2,16 @@
 
 
 .. Keep the current version number on line number 5
-0.0.6.dev0
-==========
+0.0.6
+=====
+
+2020-04-20
 
 * Add support for 'requirements.txt' files
 * Fix call to main entry point of 'shiv', somewhat revert the change introduced
   in version '0.0.5'.
+* Show summary in CLI's help output
+* Add test against Python3.8 in Travis CI and GitLab
 
 
 0.0.5
