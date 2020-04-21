@@ -23,6 +23,31 @@ Source code:
 Usage
 =====
 
+
+.. code::
+
+    $ toolmaker --help
+    usage: toolmaker [-h] [--version] [--config CONFIG]
+                     [--build | --rebuild | --delete] [--all]
+                     [tool [tool ...]]
+
+    Make single-file builds of Python tools using zapp, shiv, or pex
+
+    positional arguments:
+      tool                  apply action on this tool(s)
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      --version             show program's version number and exit
+      --config CONFIG, -c CONFIG
+                            configuration file (default:
+                            /home/sinoroc/.config/toolmaker/toolmaker.cfg)
+      --build, -b           build selected tool(s)
+      --rebuild, -r         rebuild selected tool(s)
+      --delete, -d          delete selected tool(s)
+      --all, -a             apply action on all tools
+
+
 Configuration
 -------------
 
