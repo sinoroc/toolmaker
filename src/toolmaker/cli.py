@@ -46,18 +46,17 @@ def _create_args_parser(default_config_path, tools_names=None):
         action='store_true',
         help=_("delete selected tool(s)"),
     )
-    tools_group = args_parser.add_mutually_exclusive_group(required=True)
-    tools_group.add_argument(
+    args_parser.add_argument(
         '--all', '-a',
         action='store_true',
         help=_("apply action on all tools"),
     )
-    tools_group.add_argument(
-        '--tools', '-t',
+    args_parser.add_argument(
+        'tools',
         choices=tools_names,
-        help=_("apply action on this list of tools"),
+        help=_("apply action on this tool(s)"),
         metavar='tool',
-        nargs='+',
+        nargs='*',
     )
     return args_parser
 

@@ -2,6 +2,14 @@
 
 
 .. Keep the current version number on line number 5
+0.0.7
+=====
+
+2020-04-21
+
+* Replace CLI optional '--tools' with positional
+
+
 0.0.6
 =====
 
