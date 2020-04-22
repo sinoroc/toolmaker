@@ -1,15 +1,12 @@
 #
 
-
 """ Command line interface """
-
 
 import argparse
 
 from . import _i18n
 from . import _meta
 from . import core
-
 
 _ = _i18n._
 
@@ -25,29 +22,34 @@ def _create_args_parser(default_config_path, tools_names=None):
         version=_meta.VERSION,
     )
     args_parser.add_argument(
-        '--config', '-c',
+        '--config',
+        '-c',
         default=str(default_config_path),
         help=_("configuration file (default: {})").format(default_config_path),
         type=argparse.FileType('r'),
     )
     action_group = args_parser.add_mutually_exclusive_group()
     action_group.add_argument(
-        '--build', '-b',
+        '--build',
+        '-b',
         action='store_true',
         help=_("build selected tool(s)"),
     )
     action_group.add_argument(
-        '--rebuild', '-r',
+        '--rebuild',
+        '-r',
         action='store_true',
         help=_("rebuild selected tool(s)"),
     )
     action_group.add_argument(
-        '--delete', '-d',
+        '--delete',
+        '-d',
         action='store_true',
         help=_("delete selected tool(s)"),
     )
     args_parser.add_argument(
-        '--all', '-a',
+        '--all',
+        '-a',
         action='store_true',
         help=_("apply action on all tools"),
     )

@@ -1,6 +1,5 @@
 #
 
-
 """Internationalization"""
 
 
@@ -9,6 +8,5 @@ def _translate(message):
 
 
 _ = _translate
-
 
 # EOF

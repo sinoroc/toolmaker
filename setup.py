@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
-
 """ Setup script """
-
 
 import os
 
@@ -24,6 +22,5 @@ def _do_setup():
 
 if __name__ == '__main__':
     _do_setup()
-
 
 # EOF

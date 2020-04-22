@@ -1,9 +1,7 @@
 #
 
-
 """ Core functionalities
 """
-
 
 import configparser
 import errno
@@ -20,7 +18,6 @@ import zapp
 
 from . import _meta
 
-
 LOGGER = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
@@ -35,8 +32,7 @@ def _pex(requirements_txts, entry_point, output_file_path):
         '--output-file={}'.format(str(output_file_path)),
     ] + [
         '--requirement={}'.format(requirements_txt)
-        for requirements_txt
-        in requirements_txts
+        for requirements_txt in requirements_txts
     ]
     pex.bin.pex.main(command)
 
@@ -44,12 +40,10 @@ def _pex(requirements_txts, entry_point, output_file_path):
 def _shiv(requirements_txts, entry_point, output_file_path):
     pip_args = []
     for requirements_txt in requirements_txts:
-        pip_args.extend(
-            [
-                '--requirement',
-                requirements_txt,
-            ],
-        )
+        pip_args.extend([
+            '--requirement',
+            requirements_txt,
+        ])
     # Since it is decorated by 'click', the 'main' function is not callable
     # with its original arguments. The original function is "hidden" under
     # 'shiv.cli.main.callback'. And 'shiv.cli.main' takes the equivalent of
@@ -90,15 +84,14 @@ def _get_requirements_txts(tool_config, temp_requirements_txt):
         stripped_line = line.strip()
         if stripped_line:
             requirements_txt_path = pathlib.Path(stripped_line)
-            requirements_txts.append(
-                str(requirements_txt_path)
+            requirements_txt_absolute_path = (
+                requirements_txt_path
                 if requirements_txt_path.is_absolute()
-                else str(
-                    tool_config['configuration_directory'].joinpath(
-                        requirements_txt_path,
-                    )
+                else tool_config['configuration_directory'].joinpath(
+                    requirements_txt_path,
                 )
-            )
+            )  # yapf: disable
+            requirements_txts.append(str(requirements_txt_absolute_path))
     #
     return requirements_txts
 
@@ -110,7 +103,7 @@ def _get_file_path(tool_config):
         ).expanduser()
         if 'tools_directory' in tool_config
         else pathlib.Path.cwd()
-    )
+    )  # yapf: disable
 
     if 'tool_directory' in tool_config:
         tool_directory_name = tool_config['tool_directory']
