@@ -1,6 +1,6 @@
 #
 
-""" Module main entry point """
+"""Module main entry point."""
 
 from . import cli
 

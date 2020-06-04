@@ -1,5 +1,4 @@
-""" Unit tests
-"""
+"""Unit tests."""
 
 import tempfile
 import unittest
@@ -8,12 +7,10 @@ import toolmaker
 
 
 class TestProjectVersion(unittest.TestCase):
-    """ Project version string
-    """
+    """Project version string."""
 
     def test_project_has_version_string(self):
-        """ Project should have a vesion string
-        """
+        """Project should have a vesion string."""
         try:
             toolmaker.__version__
         except AttributeError as version_exception:
@@ -39,10 +36,10 @@ def _get_path(config, tool_name):
 
 
 class TestGetFilePath(unittest.TestCase):
-    """Test 'get_file_path'"""
+    """Test 'get_file_path'."""
 
     def test_get_file_path_one(self):
-        """Install all in one specific directory"""
+        """Install all in one specific directory."""
         str_config = """
         [toolmaker.tool.defaults]
         tools_directory = /somewhere
@@ -63,7 +60,7 @@ class TestGetFilePath(unittest.TestCase):
         )
 
     def test_get_file_path_current(self):
-        """Install all in current directory"""
+        """Install all in current directory."""
         str_config = """
         [toolmaker.tool.defaults]
         tools_directory =
@@ -84,7 +81,7 @@ class TestGetFilePath(unittest.TestCase):
         )
 
     def test_get_file_path_subfolder(self):
-        """Install in subdirectories"""
+        """Install in subdirectories."""
         str_config = """
         [toolmaker.tool.defaults]
         tools_directory = /somewhere

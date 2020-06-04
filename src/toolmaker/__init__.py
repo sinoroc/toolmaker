@@ -1,11 +1,10 @@
 #
 
-""" Module initializer """
+"""Package initializer."""
 
 from . import _meta
 from . import core
 
-# PEP 396
-__version__ = _meta.VERSION
+__version__ = _meta.VERSION  # PEP 396
 
 # EOF

@@ -6,6 +6,7 @@
 /.eggs/
 /.pytest_cache/
 /.tox/
+/.venv/
 /build/
 /dist/
 *.dist-info/

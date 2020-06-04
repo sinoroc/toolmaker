@@ -1,6 +1,6 @@
 #
 
-""" Command line interface """
+"""Command line interface."""
 
 import argparse
 
@@ -64,8 +64,7 @@ def _create_args_parser(default_config_path, tools_names=None):
 
 
 def main():
-    """ CLI main function
-    """
+    """Create and run CLI application."""
     default_config_path = core.get_default_config_file_path()
 
     args_parser = _create_args_parser(default_config_path)
@@ -75,7 +74,7 @@ def main():
     if args.config:
         try:
             config = core.parse_config(args.config)
-        except core.ConfigurationFileError as config_error:
+        except core.CanNotParseConfigurationFile as config_error:
             args_parser.error(config_error)
         else:
             tools_names = list(config['tools'].keys())

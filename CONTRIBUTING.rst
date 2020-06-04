@@ -48,7 +48,6 @@ Outside of a Python virtual environment run the following command::
 .. Links
 
 .. _`GNU Make`: https://www.gnu.org/software/make/
-.. _`GNU Stow`: https://www.gnu.org/software/stow/
 .. _`pytest`: https://pytest.org/
 .. _`tox`: https://tox.readthedocs.io/
 

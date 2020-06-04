@@ -1,26 +1,28 @@
 #!/usr/bin/env python3
 
-""" Setup script """
+"""Setup script."""
 
-import os
+import pathlib
 
 import setuptools
 
 
-def _do_setup():
-    here = os.path.abspath(os.path.dirname(__file__))
-    with open(os.path.join(here, 'CHANGELOG.rst')) as file_:
+def _get_version(file_name, line_number):
+    here_path = pathlib.Path(__file__).resolve().parent
+    with here_path.joinpath(file_name).open() as file_:
         changelog = file_.read()
+    version = changelog.splitlines()[line_number]
+    return version
 
-    version = changelog.splitlines()[4]
 
+def _main():
     setuptools.setup(
-        # see 'setup.cfg'
-        version=version,
+        # 'setup.cfg'
+        version=_get_version('CHANGELOG.rst', 4),
     )
 
 
 if __name__ == '__main__':
-    _do_setup()
+    _main()
 
 # EOF

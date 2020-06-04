@@ -1,7 +1,6 @@
 #
 
-""" Core functionalities
-"""
+"""Handle core functionalities."""
 
 import configparser
 import errno
@@ -22,8 +21,8 @@ LOGGER = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 
-class ConfigurationFileError(configparser.Error):
-    """Configuration file error"""
+class CanNotParseConfigurationFile(configparser.Error):
+    """Can not parse configuration file."""
 
 
 def _pex(requirements_txts, entry_point, output_file_path):
@@ -124,8 +123,7 @@ def _get_file_path(tool_config):
 
 
 def _build_pex(tool_config, force):
-    """ Build pex
-    """
+    """Build pex."""
     tool_name = tool_config['name']
     output_file_path = _get_file_path(tool_config)
     if force or not output_file_path.exists():
@@ -143,8 +141,7 @@ def _build_pex(tool_config, force):
 
 
 def _build_shiv(tool_config, force):
-    """ Build shiv
-    """
+    """Build shiv."""
     tool_name = tool_config['name']
     output_file_path = _get_file_path(tool_config)
     if force or not output_file_path.exists():
@@ -162,8 +159,7 @@ def _build_shiv(tool_config, force):
 
 
 def _build_zapp(tool_config, force):
-    """ Build zapp
-    """
+    """Build zapp."""
     tool_name = tool_config['name']
     output_file_path = _get_file_path(tool_config)
     if force or not output_file_path.exists():
@@ -200,8 +196,7 @@ def _parse_tool_config(raw_config, section_name):
 
 
 def parse_config(config_file):
-    """ Parse the configuration file to build a configuration dictionary
-    """
+    """Parse the configuration file to build a configuration dictionary."""
     config = None
     raw_config = configparser.ConfigParser(
         default_section='{}.tool.defaults'.format(_meta.PROJECT_NAME),
@@ -215,7 +210,7 @@ def parse_config(config_file):
             "Can not read configuration from file '%s'",
             config_file.name,
         )
-        raise ConfigurationFileError(str(config_error))
+        raise CanNotParseConfigurationFile(str(config_error))
     else:
         config_directory_path = pathlib.Path(config_file.name).resolve().parent
         config = {
@@ -233,8 +228,7 @@ def parse_config(config_file):
 
 
 def build(config, tools_names, force=False):
-    """ Build tools
-    """
+    """Build tools."""
     LOGGER.info("Building tools %s...", tools_names)
 
     for tool_name in tools_names:
@@ -258,8 +252,7 @@ def build(config, tools_names, force=False):
 
 
 def delete(config, tools_names):
-    """ Delete tools
-    """
+    """Delete tools."""
     LOGGER.info("Deleting tools %s...", tools_names)
 
     for tool_name in tools_names:
@@ -285,9 +278,7 @@ def delete(config, tools_names):
 
 
 def get_default_config_file_path():
-    """ Get default path for configuration file
-        Depends on the operating system.
-    """
+    """Get operating system-specific default path for configuration file."""
     file_name = 'toolmaker.cfg'
     dir_name = _meta.PROJECT_NAME
     path = None

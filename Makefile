@@ -5,7 +5,11 @@ source_dir := ./src
 tests_dir := ./test
 
 
-.DEFAULT_GOAL := develop
+.DEFAULT_GOAL := refresh
+
+
+.PHONY: refresh
+refresh: clean develop review package
 
 
 .PHONY: develop
@@ -46,12 +50,17 @@ check:
 
 .PHONY: lint
 lint:
-	python3 -m pytest --pycodestyle --pylint --yapf -m 'pycodestyle or pylint or yapf'
+	python3 -m pytest --pycodestyle --pydocstyle --pylint --yapf -m 'pycodestyle or pydocstyle or pylint or yapf'
 
 
 .PHONY: pycodestyle
 pycodestyle:
 	python3 -m pytest --pycodestyle -m pycodestyle
+
+
+.PHONY: pydocstyle
+pydocstyle:
+	python3 -m pytest --pydocstyle -m pydocstyle
 
 
 .PHONY: pylint
@@ -75,7 +84,7 @@ pytest:
 
 .PHONY: review
 review: check
-	python3 -m pytest --pycodestyle --pylint --yapf
+	python3 -m pytest --pycodestyle --pydocstyle --pylint --yapf
 
 
 .PHONY: clean
@@ -98,7 +107,7 @@ clean:
 #
 
 # Disable default rules and suffixes (improve speed and avoid unexpected behaviour)
-MAKEFLAGS := --no-builtin-rules
+MAKEFLAGS := --no-builtin-rules --warn-undefined-variables
 .SUFFIXES:
 
 
